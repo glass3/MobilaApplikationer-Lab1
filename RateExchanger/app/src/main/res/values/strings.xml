@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Rate Exchanger</string>
-
-    <string-array name="currencies">
-    </string-array>
-</resources>

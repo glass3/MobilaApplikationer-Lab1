@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CurrencyExchanger</string>
+    <string-array name="currencies">
+        <item>EUR</item>
+        <item>SEK</item>
+        <item>USD</item>
+        <item>GBP</item>
+        <item>CNY</item>
+        <item>JPY</item>
+        <item>KRW</item>
+    </string-array>
+</resources>
