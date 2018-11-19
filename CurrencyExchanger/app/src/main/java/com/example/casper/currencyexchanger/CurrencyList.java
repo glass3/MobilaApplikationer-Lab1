@@ -52,7 +52,7 @@ public class CurrencyList extends AppCompatActivity {
         TextView textView = findViewById(R.id.list);
 
         for (int j=0; j < size; j++){
-            textView.append(keys[j]+ "\t"+values[j]+"\n");
+            textView.append(keys[j]+ ":\t"+values[j]+"\n");
         }
 
 
@@ -74,7 +74,7 @@ public class CurrencyList extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
 
-            if (event2.getX() < event1.getX()){
+            if (event2.getX() > event1.getX()){
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }

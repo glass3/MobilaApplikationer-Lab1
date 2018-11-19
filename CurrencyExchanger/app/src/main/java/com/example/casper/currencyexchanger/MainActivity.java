@@ -17,12 +17,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         EditText editText = findViewById(R.id.StartValue);
 
 
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     finalText.setText("");  //clears the converted field
                     return;
                 }
+
                 float sum = Float.parseFloat(textsum);
 
                 Spinner spinnerStartCurrency = (Spinner) findViewById(R.id.StartCurrency);
@@ -108,8 +111,92 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         gestureObject = new GestureDetectorCompat(this, new LearnGesture());
     }
+
+
+    public void spinnerChange(){
+
+
+        Spinner spinner = (Spinner) findViewById(R.id.StartCurrency);
+        Spinner spinner2 = (Spinner) findViewById(R.id.EndCurrency);
+
+
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+
+                EditText editText = (EditText)findViewById(R.id.StartValue);
+                TextView finalText = findViewById(R.id.EndValue);
+                String textsum = editText.getText().toString();
+
+                if(textsum.length() <= 0){ //checks that the field isn't empty
+                    finalText.setText("");  //clears the converted field
+                    return;
+                }
+
+                float sum = Float.parseFloat(textsum);
+
+                Spinner spinnerStartCurrency = (Spinner) findViewById(R.id.StartCurrency);
+                String startCurrency = spinnerStartCurrency.getSelectedItem().toString();
+
+                Spinner spinnerEndCurrency = (Spinner)findViewById(R.id.EndCurrency);
+                String endCurrency = spinnerEndCurrency.getSelectedItem().toString();
+
+
+                Exchanger(startCurrency, endCurrency, sum);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                return;
+            }
+
+        });
+
+
+
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                EditText editText = (EditText)findViewById(R.id.StartValue);
+                TextView finalText = findViewById(R.id.EndValue);
+                String textsum = editText.getText().toString();
+
+                if(textsum.length() <= 0){ //checks that the field isn't empty
+                    finalText.setText("");  //clears the converted field
+                    return;
+                }
+
+                float sum = Float.parseFloat(textsum);
+
+                Spinner spinnerStartCurrency = (Spinner) findViewById(R.id.StartCurrency);
+                String startCurrency = spinnerStartCurrency.getSelectedItem().toString();
+
+                Spinner spinnerEndCurrency = (Spinner)findViewById(R.id.EndCurrency);
+                String endCurrency = spinnerEndCurrency.getSelectedItem().toString();
+
+
+                Exchanger(startCurrency, endCurrency, sum);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                return;
+
+            }
+
+        });
+
+
+
+    }
+
 
 
 
@@ -169,14 +256,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
 
-            if(event2.getX() > event1.getX())
+            if(event2.getX() > event1.getX())       //Swipe höger
             {
-                Toast.makeText(getApplicationContext(), "swipe 1", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "swipe 1", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), CurrencyList.class);
                 startActivity(intent);
 
             }
-            else if (event2.getX() < event1.getX()){
+            else if (event2.getX() < event1.getX()){     //swipe vänster
                 Intent intent = new Intent(getApplicationContext(), AddCurrency.class);
                 startActivity(intent);
             }
