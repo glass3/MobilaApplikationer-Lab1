@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -50,7 +51,7 @@ public class CurrencyList extends AppCompatActivity {
         }
 
         TextView textView = findViewById(R.id.list);
-
+        textView.setMovementMethod(new ScrollingMovementMethod());
         for (int j=0; j < size; j++){
             textView.append(keys[j]+ ":\t"+values[j]+"\n");
         }

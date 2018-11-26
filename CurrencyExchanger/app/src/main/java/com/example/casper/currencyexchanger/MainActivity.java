@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
         //requestHandler();
         Simplerequest();
-
+        // TODO Remove all these add currency ones
+        // TODO Fix a Scrollbar for the currency page
+        // TODO fix animations whens swiping
         addCurrency("EUR", 1f);
         addCurrency("SEK",10.251925f);
         addCurrency("USD", 1.13171f);
