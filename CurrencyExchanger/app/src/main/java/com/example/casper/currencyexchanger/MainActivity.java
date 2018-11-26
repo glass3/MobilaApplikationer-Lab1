@@ -36,6 +36,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        requestHandler();
-
+        //requestHandler();
+        Simplerequest();
 
         addCurrency("EUR", 1f);
         addCurrency("SEK",10.251925f);
@@ -325,7 +326,47 @@ public class MainActivity extends AppCompatActivity {
         //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
+    public void Simplerequest(){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://data.fixer.io/api/latest?access_key=06be999ca35f0170790fa4b8b6da4399&format=1";
 
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject reader = new JSONObject(response); // This creates an JSON object out of the string we received from the Request. The string is already in an Json like format
+                            JSONObject rates = reader.getJSONObject("rates"); // Creates an object which contains all the rates from the already previously reader object
+                            String eur = rates.getString("AED"); // here we get the value from the rates object that matches the key we have chosen. for example EUR or AED. TODO Remove
+                            JSONArray arr = rates.names(); // Json Array that contains all the names of the rates that we can fetch. This do not include the value of that rate.
+                          //  Toast.makeText(getApplicationContext(), eur, Toast.LENGTH_SHORT).show(); // Prints the value we got from above. this is strictly for testing
+                                for (int i = 0; i<arr.length(); i++)
+                                {
+                                    String c = arr.getString(i);
+                                    String name = c.toString(); // Might be redundant TODO Check if this is redundant
+                                    double exchange = rates.getDouble(name); // gets the currency as a double TODO fix the name
+                                    float currency = (float) exchange; // casts the double as a float TODO fix this maybe as a nicer fix
+                                    addCurrency(name,currency); // Inserts the currency name and value into the add currency function.
+                                  //  Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
+                                }
+                        } catch (JSONException e) {
+                            e.printStackTrace(); // Error handling. TODO
+                        }
+
+                        // Display the first 500 characters of the response string.
+                      //  mTextView.setText("Response is: "+ response.substring(0,500));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+              //  mTextView.setText("That didn't work!");
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
 /*
     public void requestHandler(){
         String url ="http://data.fixer.io/api/latest?access_key=06be999ca35f0170790fa4b8b6da4399&format=1";
