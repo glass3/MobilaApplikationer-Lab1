@@ -31,6 +31,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -55,19 +56,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
+        SimpleIPrequest();
         //requestHandler();
-        Simplerequest();
-        // TODO Remove all these add currency ones
-        // TODO Fix a Scrollbar for the currency page
         // TODO fix animations whens swiping
-        addCurrency("EUR", 1f);
-        addCurrency("SEK",10.251925f);
-        addCurrency("USD", 1.13171f);
-        addCurrency("GBP", 0.887334523f);
-        addCurrency("CNY", 7.85304383f);
-        addCurrency("JPY", 128.413707f);
-        addCurrency("KRW", 1277.32506f);
 
 
 
@@ -328,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
-    public void Simplerequest(){
+    public void Simplerequest(final String countrycurr){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="http://data.fixer.io/api/latest?access_key=06be999ca35f0170790fa4b8b6da4399&format=1";
 
@@ -352,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
                                     addCurrency(name,currency); // Inserts the currency name and value into the add currency function.
                                   //  Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
                                 }
+                            Toast.makeText(getApplicationContext(),countrycurr , Toast.LENGTH_SHORT).show(); //TODO Change this to actually change the spinner with the arguemnt we use.
                         } catch (JSONException e) {
                             e.printStackTrace(); // Error handling. TODO
                         }
@@ -368,6 +360,74 @@ public class MainActivity extends AppCompatActivity {
 
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+    public void SimpleIPrequest(){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://api.ipstack.com/check?access_key=8d45036b5d2e921ad7fd9679f68cd0a9";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject reader = new JSONObject(response);
+                            String landcode = reader.getString("country_code");
+                            GetCountry(landcode);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //  mTextView.setText("That didn't work!");
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+    public void GetCountry(String arg){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="https://restcountries.eu/rest/v2/alpha/"+arg;
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject reader = new JSONObject(response); // make an json object out of the string
+                            JSONArray currencie = reader.getJSONArray("currencies"); // Make an array reader for the root of the subobject currencies of hte mian object
+                            JSONObject currlvl = currencie.getJSONObject(0); // make an object of the array slot of the array
+                            String currcode = currlvl.getString("code"); // fetch the value out of the value pair of the object we made out of the array
+                            Simplerequest(currcode);
+                            //Toast.makeText(getApplicationContext(), currcode, Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //  mTextView.setText("That didn't work!");
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+    private int getIndex(Spinner spinner, String myString){
+
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).equals(myString)){
+                index = i;
+            }
+        }
+        return index;
     }
 /*
     public void requestHandler(){
