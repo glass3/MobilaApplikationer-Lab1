@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundimage"
     tools:context=".CurrencyList">
 
     <TextView
@@ -13,8 +14,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="101dp"
-        android:layout_marginRight="101dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
         android:text="@string/currencylist"
         android:textColor="@android:color/black"
         android:textSize="24sp"
@@ -27,11 +29,35 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:contentDescription="List of currencies"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        android:scrollbars = "vertical"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+    <com.hrskrs.instadotlib.InstaDotView
+        android:id="@+id/instadot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:dot_activeColor="@color/colorAccent"
+        app:dot_activeSize="10dp"
+        app:dot_inactiveColor="@color/colorPrimaryDark"
+        app:dot_inactiveSize="8dp"
+        app:dot_margin="10dp"
+        app:dot_mediumSize="6dp"
+        app:dot_smallSize="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

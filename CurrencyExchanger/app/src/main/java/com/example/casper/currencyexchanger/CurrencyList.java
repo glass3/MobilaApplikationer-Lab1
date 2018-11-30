@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hrskrs.instadotlib.InstaDotView;
+
 import org.w3c.dom.Text;
 
 import java.util.Map;
@@ -26,6 +28,11 @@ public class CurrencyList extends AppCompatActivity {
         setContentView(R.layout.activity_currency_list);
 
 
+        final InstaDotView instaDotView = findViewById(R.id.instadot);
+        instaDotView.setNoOfPages(3);
+        instaDotView.onPageChange(2);
+
+
         gestureObject = new GestureDetectorCompat(this, new LearnGesture());
 
 
@@ -34,6 +41,7 @@ public class CurrencyList extends AppCompatActivity {
 
 
         Map<String, ?> allEntries = prefA.getAll();
+
 
         int size = allEntries.size();
         String[] keys = new String[size];
@@ -51,9 +59,10 @@ public class CurrencyList extends AppCompatActivity {
         }
 
         TextView textView = findViewById(R.id.list);
+
         textView.setMovementMethod(new ScrollingMovementMethod());
         for (int j=0; j < size; j++){
-            textView.append(keys[j]+ ":\t"+values[j]+"\n");
+            textView.append(keys[j]+ ":\t\t"+values[j]+"\n");
         }
 
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
+    android:background="@drawable/backgroundimage"
     tools:layout_editor_absoluteY="81dp">
 
     <Spinner
@@ -69,23 +70,6 @@
         app:layout_constraintStart_toEndOf="@+id/StartValue"
         app:layout_constraintTop_toBottomOf="@+id/EndCurrency" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Exchange"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -117,5 +101,27 @@
         app:layout_constraintBottom_toTopOf="@+id/EndValue"
         app:layout_constraintEnd_toEndOf="@+id/EndValue"
         app:layout_constraintStart_toStartOf="@+id/EndValue" />
+
+
+    <com.hrskrs.instadotlib.InstaDotView
+        android:id="@+id/instadot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:dot_activeColor="@color/colorAccent"
+        app:dot_activeSize="10dp"
+        app:dot_inactiveColor="@color/colorPrimaryDark"
+        app:dot_inactiveSize="8dp"
+        app:dot_margin="10dp"
+        app:dot_mediumSize="6dp"
+        app:dot_smallSize="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

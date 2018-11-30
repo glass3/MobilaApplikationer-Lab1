@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.hrskrs.instadotlib.InstaDotView;
+
 import java.util.Map;
 
 
@@ -33,6 +35,10 @@ public class AddCurrency extends AppCompatActivity {
         gestureObject = new GestureDetectorCompat(this, new LearnGesture());
 
 
+
+        final InstaDotView instaDotView = findViewById(R.id.instadot);
+        instaDotView.setNoOfPages(3);
+        instaDotView.onPageChange(0);
 
         final Button button = findViewById(R.id.addButton);
         button.setOnClickListener(new View.OnClickListener() {

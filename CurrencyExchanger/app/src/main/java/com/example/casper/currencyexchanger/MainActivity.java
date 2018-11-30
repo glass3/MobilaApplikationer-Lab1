@@ -1,53 +1,46 @@
 package com.example.casper.currencyexchanger;
 
-
-
-
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.OnLifecycleEvent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+
+import me.relex.circleindicator.CircleIndicator;
+import com.hrskrs.instadotlib.InstaDotView;
+
 
 public class MainActivity extends AppCompatActivity {
 
 
+    ProgressDialog progressBar;
     private GestureDetectorCompat gestureObject;
 
     @Override
@@ -55,12 +48,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = new ProgressDialog(MainActivity.this);
+        progressBar.setTitle("Loading currencies");
+        progressBar.setMessage("Please Wait...");
+        progressBar.show();
 
-        SimpleIPrequest();
-        //requestHandler();
+
+
+        final InstaDotView instaDotView = findViewById(R.id.instadot);
+        instaDotView.setNoOfPages(3);
+        instaDotView.onPageChange(1);
+
+
+
+
+        SimpleIPrequest();  //pulls users IP from an API and gets the country the user is in
+                            //which then gets that countries currency.
+                            // Fetches all currencies and sets the default currency.
+
+
+
         // TODO fix animations whens swiping
-
-
 
 
         EditText editText = findViewById(R.id.StartValue);
@@ -105,17 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //Creates spinner adapter to style and fill
-        Spinner spinner = (Spinner) findViewById(R.id.StartCurrency);
-        Spinner spinner2 = (Spinner) findViewById(R.id.EndCurrency);
-
-        //styles and fills the adapters
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.currencies, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        //matches the spinners with the finished adapters
-        spinner.setAdapter(adapter);
-        spinner2.setAdapter(adapter);
 
         spinnerChange();
 
@@ -208,13 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
-
+    public void spinnerUpdater(){
         SharedPreferences pref = getSharedPreferences("DATA", MODE_PRIVATE);
 
         Map<String, ?> allEntries = pref.getAll();
@@ -246,6 +237,13 @@ public class MainActivity extends AppCompatActivity {
 
         spinner.setAdapter(adapter);
         spinner2.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        spinnerUpdater(); //gets latest spinner values
 
 
         return;
@@ -280,44 +278,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void requestHandler(){
-        String url ="http://data.fixer.io/api/latest?access_key=06be999ca35f0170790fa4b8b6da4399&format=1";
-        RequestQueue queue = Volley.newRequestQueue(this);
 
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(), "swipe 1", Toast.LENGTH_SHORT).show();
-                        JSONObject data = response;
-
-                        //String rates =  data.getString("rates");
-                        response.getClass();
-                        data.opt("rates");
-
-                        data.optString("rates");
-
-                        JSONObject test = data.optJSONObject("rates");
-
-                        
-
-                    }
-
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-
-// Access the RequestQueue through your singleton class.
-        queue.add(jsonObjectRequest);
-        //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
-    }
 
     public void Simplerequest(final String countrycurr){
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -341,9 +302,24 @@ public class MainActivity extends AppCompatActivity {
                                     double exchange = rates.getDouble(name); // gets the currency as a double TODO fix the name
                                     float currency = (float) exchange; // casts the double as a float TODO fix this maybe as a nicer fix
                                     addCurrency(name,currency); // Inserts the currency name and value into the add currency function.
-                                  //  Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
                                 }
-                            Toast.makeText(getApplicationContext(),countrycurr , Toast.LENGTH_SHORT).show(); //TODO Change this to actually change the spinner with the arguemnt we use.
+
+
+                            spinnerUpdater();   //fills spinners with new values
+                            Spinner spinner = findViewById(R.id.StartCurrency);
+
+
+                            if (countrycurr != null) {  //sets the spinner to current country
+                                Adapter adapter = (ArrayAdapter) spinner.getAdapter();
+                                int spinnerPosition = ((ArrayAdapter) adapter).getPosition(countrycurr);
+                                spinner.setSelection(spinnerPosition);
+                                progressBar.cancel();  //stops the progressbar because everything is loaded
+
+
+                            }
+
+
+
                         } catch (JSONException e) {
                             e.printStackTrace(); // Error handling. TODO
                         }
@@ -418,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-    private int getIndex(Spinner spinner, String myString){
+    private int getIndex(Spinner spinner, String myString){     //används inte?
 
         int index = 0;
 
@@ -429,31 +405,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return index;
     }
-/*
-    public void requestHandler(){
-        String url ="http://data.fixer.io/api/latest?access_key=06be999ca35f0170790fa4b8b6da4399&format=1";
-
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSONParser parser = new JSONParser();
-                        JSONObject json = (JSONObject) parser.parse(stringToParse);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-*/
 
 
 
@@ -489,6 +440,8 @@ public class MainActivity extends AppCompatActivity {
 
         return;
     }
+
+
 
 
 
